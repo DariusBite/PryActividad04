@@ -19,6 +19,21 @@ public class ColeccionDeObjetos {
         return -1;
     }
 
+    public ArrayList buscarPorMarca(ArrayList coleccion, String dato)
+    {
+        int i;
+        ArrayList temp = new ArrayList();
+
+        for(i=0; i<coleccion.size(); i=i+1)
+        {
+            obj = (TelefonoCelular) coleccion.get(i);
+
+            if(obj.marca.equals(dato))
+                temp.add(obj);
+        }
+        return temp;
+    }
+
     public void ordenarPorModelo(ArrayList coleccion)
     {
         int i, j;
@@ -50,7 +65,7 @@ public class ColeccionDeObjetos {
                 tempo1 = (TelefonoCelular) coleccion.get(i);
                 tempo2 = (TelefonoCelular) coleccion.get(j);
 
-                if(tempo1.precio > tempo2.precio)
+                if(tempo1.precio < tempo2.precio)
                 {
                     obj = tempo1;
                     coleccion.set(i, tempo2);

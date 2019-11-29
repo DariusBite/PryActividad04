@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -63,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
         txtMarca.setText("");
         txtModelo.requestFocus();
     }
-    public void mostrar()
+    public void mostrar(ArrayList arr)
     {
+        tabla.removeAllViews();
             TableRow row= new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             row.setLayoutParams(lp);
@@ -88,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
             row.addView(tutilidad);
             tabla.addView(row,0);
 
-            for (int i = 1; i <=celulares.size(); i++) {
-                obj = (TelefonoCelular) celulares.get(i-1);
+            for (int i = 1; i <=arr.size(); i++) {
+                obj = (TelefonoCelular) arr.get(i-1);
                 row= new TableRow(this);
                 lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 row.setLayoutParams(lp);
@@ -127,7 +129,65 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnMostrar(View d){
-        mostrar();
+        mostrar(celulares);
+    }
 
+    public void btnBuscar(View d) {
+        // TODO add your handling code here:
+        String aux, opcion;
+        int i, pos;
+        ArrayList temp;
+
+        opcion = spnBuscar.getSelectedItem().toString();
+
+        if(opcion.equals("-Buscar-"))
+            Toast.makeText(this, "Selecciona una opción", Toast.LENGTH_SHORT).show();
+        else
+        if(opcion.equals("Por modelo"))
+        {
+            aux = txtModelo.getText().toString();
+            pos = cdo.buscarPorModelo(celulares, aux);
+
+            if(pos != -1)
+            {
+                obj = (TelefonoCelular)celulares.get(pos);
+                txtCosto.setText(obj.costo + "");
+                txtMarca.setText(obj.marca + "");
+            }
+            else
+                Toast.makeText(this, "No está en la Coleccion", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            aux = txtMarca.getText().toString();
+            temp = cdo.buscarPorMarca(celulares, aux);
+
+            if(!temp.isEmpty())
+            {
+                mostrar(temp);
+            }
+            else
+                Toast.makeText(this, "No está en la Coleccion", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void btnOrdenar(View d) {
+        // TODO add your handling code here:
+        String opcion;
+
+        opcion = spnOrdenar.getSelectedItem().toString();
+
+        if(opcion.equals("-Ordenar-"))
+            Toast.makeText(this, "Selecciona una opción", Toast.LENGTH_SHORT).show();
+        else
+        {
+            if(opcion.equals("Por modelo"))
+                cdo.ordenarPorModelo(celulares);
+            else
+            {
+                cdo.ordenarPorPrecio(celulares);
+            }
+            mostrar(celulares);
+        }
     }
 }
